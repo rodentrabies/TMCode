@@ -1,5 +1,3 @@
-# main script
-
 from internals.Machine import *
 
 builder = MachineBuilder()

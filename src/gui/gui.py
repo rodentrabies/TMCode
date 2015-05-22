@@ -1,11 +1,11 @@
 from tkinter import *
 
+
 class TM(Frame):
     """
     Turing Machine main window which creates machine builder and
     spawns initialization window before starting performance
     """
-
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.pack()
@@ -28,8 +28,7 @@ class TM(Frame):
 
         self.hi_there.pack({"side": "left"})
 
-root = Tk()
-tm = TM(master=root)
-tm.mainloop()
-root.destroy()
+
+
+        
 
