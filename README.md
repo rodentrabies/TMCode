@@ -1,4 +1,5 @@
-# Universal Turing Machine Model
+# CMCode
+## Universal Turing machine model with intuitive syntax
 
 Simple minimalistic object-oriented model of UTM written as part of course work for University OOP course.
 
