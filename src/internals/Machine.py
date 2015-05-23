@@ -37,6 +37,10 @@ class MachineBuilder:
         return self._alphabet
     @alphabet.setter
     def alphabet(self, val):
+        if self._initial_data:
+            for i in self._initial_data:
+                if not i in val:
+                    raise AlphabetException()
         self._alphabet = val
     # <----- end 'alphabet' property
 
@@ -58,6 +62,10 @@ class MachineBuilder:
         return self._initial_data
     @initial_data.setter
     def initial_data(self, val):
+        if self._alphabet:
+            for i in val:
+                if not i in self._alphabet:
+                    raise AlphabetException()
         self._initial_data = val
     # <----- end 'initial_data' property
 
@@ -68,6 +76,9 @@ class MachineBuilder:
         return self._initial_state
     @initial_state.setter
     def initial_state(self, val):
+        if self._slist:
+            if val not in self._slist:
+                raise StateException()
         self._initial_state = val
     # <----- end 'initial_state' property
     
@@ -78,6 +89,9 @@ class MachineBuilder:
         return self._slist
     @slist.setter
     def slist(self, val):
+        if self._initial_state:
+            if self._initial_state not in val:
+                raise StateException()
         self._slist = val
     # <----- end 'slist' property
 
@@ -94,7 +108,7 @@ class MachineBuilder:
                 Tape(self._initial_data, self._endsym)
             )
         else:
-            raise MachineException()
+            raise IncompleteMachineException()
     # <----- end 'machine' property
 
         
@@ -106,38 +120,20 @@ class Machine:
     def __init__(self, slist, alphabet, endsym, head, tape):
         self._slist, self._alphabet, self._endsym = slist, alphabet, endsym
         self._head, self._tape = head, tape
-        self._running = False # controller variable
+        self.running = False # controller variable
 
     def __str__(self):
-        # return ("Machine\n{{{0}}}\n[{1}]\nendsym: '{2}'\n" +
-        #         "{3}\n{4}\nrunning: {5}\nalgorithm:\n{6}").format(
-        #     ", ".join(self._slist),
-        #     ", ".join(self._alphabet),
-        #     self._endsym,
-        #     str(self._head),
-        #     str(self._tape),
-        #     self._running,
-        #     str(self._algorithm)
-        # )
         return str(self._tape)
-
         
     def step(self):
-        self._running = self._algorithm.execute(self._tape, self._head)
+        self.running = self._algorithm.execute(self._tape, self._head)
 
-    # tmp
-    def run(self):
-        self._start()
-        while self._running:
-            self.step()
+    def stop(self):
+        self.running = False
 
-    def _stop(self):
-        self._running = False
-
-    def _start(self):
-        self._running = True
+    def start(self):
+        self.running = True
         
-
     def _check_alg(self, alg):
         return alg # TODO: implement checker for alphabet consistency
 
@@ -153,3 +149,16 @@ class Machine:
         self._algorithm = alg
     # <----- end algorithm
 
+    # 'current_symbol' - just a piece of useful information
+    # -----> begin
+    @property
+    def current_symbol(self):
+        return self._tape._current
+    # <----- end current_symbol
+
+
+    # 'current_inst' - insruction whose pattern just matched
+    # -----> begin
+    @property
+    def current_inst(self):
+        return self._algorithm._last_inst

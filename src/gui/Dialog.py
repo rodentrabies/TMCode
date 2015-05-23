@@ -1,20 +1,20 @@
-from tkinter import *
-import os
+import tkinter as tk
 
-class Dialog(Toplevel):
+
+class Dialog(tk.Toplevel):
     """
     Dialog is spawned after the creation of main window and waits for
     user actions; after user has played his part, it validates inputs and
     returns specified values
     """
     def __init__(self, parent, title = None):
-        Toplevel.__init__(self, parent)
+        tk.Toplevel.__init__(self, parent)
         self.transient(parent)
         if title:
             self.title(title)
         self.parent = parent
         self.result = None
-        body = Frame(self)
+        body = tk.Frame(self)
         self.initial_focus = self.create_widgets(body)
         body.pack(padx=5, pady=5)
         self.buttonbox()
@@ -26,11 +26,11 @@ class Dialog(Toplevel):
         self.wait_window(self)
 
     def buttonbox(self):
-        box = Frame(self)
-        w = Button(box, text="OK", width=10, command=self.ok, default=ACTIVE)
-        w.pack(side=LEFT, padx=5, pady=5)
-        w = Button(box, text="Cancel", width=10, command=self.cancel)
-        w.pack(side=LEFT, padx=5, pady=5)
+        box = tk.Frame(self)
+        w = tk.Button(box, text="OK", width=10, command=self.ok, default=tk.ACTIVE)
+        w.pack(side=tk.LEFT, padx=5, pady=5)
+        w = tk.Button(box, text="Cancel", width=10, command=self.cancel)
+        w.pack(side=tk.LEFT, padx=5, pady=5)
         self.bind("<Return>", self.ok)
         self.bind("<Escape>", self.cancel)
         box.pack()

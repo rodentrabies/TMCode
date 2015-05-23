@@ -43,9 +43,6 @@ class Instruction(Action):
 
     def __str__(self):
         return self._text
-        # return "{0}, '{1}' -> {2}, '{3}', {4}".format(
-        #     self._ist, self._isym, self._ost, self._osym, self._mov
-        # )
 
     
     def match(self, tape, head):
@@ -62,6 +59,7 @@ class Instruction(Action):
             head.move_tape_right(tape)
         elif self._mov == 'R':
             head.move_tape_left(tape)
+        return self._text
 #-------------------------------------------------------------------------------
 
 
@@ -76,7 +74,7 @@ class Algorithm(Action):
     basically is a collection of Instructions;
     """
     def __init__(self, text):
-        insts, spt = [], ['', text]
+        insts, spt, self._last_inst = [], ['', text], None
         while spt[1].strip() != '':
             spt = spt[1].strip().split(';', maxsplit = 1)
             if len(spt) == 1: raise ValueError("missed ';'")
@@ -98,7 +96,7 @@ class Algorithm(Action):
         """
         for i in self._ilist:
             if i.match(tape, head):
-                i.execute(tape, head)
+                self._last_inst = i.execute(tape, head)
                 return True
         return False
 #-------------------------------------------------------------------------------
